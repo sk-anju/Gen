@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Description Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-linkedin"></i> LinkedIn Content Creator</h1>
+            <p>Generate professional LinkedIn descriptions and matching images</p>
+        </header>
+        
+        <div class="generator-box">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="prompt">Enter your profession or expertise:</label>
+                    <input type="text" id="prompt" name="prompt" placeholder="e.g., Digital Marketing, Software Development, Data Science" required>
+                </div>
+                <button type="submit" class="generate-btn">
+                    <i class="fas fa-magic"></i> Generate Content
+                </button>
+            </form>
+            
+            {% if description %}
+            <div class="results">
+                <div class="description-box">
+                    <h3><i class="fas fa-quote-left"></i> Your LinkedIn Description</h3>
+                    <div class="description-content">
+                        {{ description | safe }}
+                    </div>
+                    <button class="copy-btn" onclick="copyToClipboard()">
+                        <i class="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                </div>
+                
+                {% if image_url %}
+                <div class="image-box">
+                    <h3><i class="fas fa-image"></i> Generated Banner Image</h3>
+                    <img src="{{ image_url }}" alt="Generated LinkedIn banner" class="generated-image">
+                    <a href="{{ image_url }}" download class="download-btn">
+                        <i class="fas fa-download"></i> Download Image
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <footer>
+            <p>Created with Flask and Stable Diffusion | © 2023 LinkedIn Generator</p>
+        </footer>
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            const description = document.querySelector('.description-content');
+            const range = document.createRange();
+            range.selectNode(description);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            
+            // Show copied notification
+            const button = document.querySelector('.copy-btn');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
